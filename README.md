@@ -31,7 +31,7 @@ Before you start, ensure you have met the following requirements:
 
 Run the script from the command line, providing the necessary arguments:
 
-  `python yt_video_summary.py [YouTube Video URL] [Whisper Model Size] [GPT Model]`
+  `python yt_video_summary.py [YouTube Video URL] [Whisper Model Size] [GPT Model] [Summary Language]`
 
 The script will process the video, transcribe the audio, generate a summary, save the summary to a text file, and clean up the downloaded files.
 
