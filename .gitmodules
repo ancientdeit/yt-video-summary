@@ -1,0 +1,6 @@
+[submodule "yt-dlp"]
+	path = yt-dlp
+	url = https://github.com/yt-dlp/yt-dlp
+[submodule "whisper"]
+	path = whisper
+	url = https://github.com/openai/whisper.git
