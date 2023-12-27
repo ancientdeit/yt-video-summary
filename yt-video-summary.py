@@ -9,8 +9,9 @@ from dotenv import load_dotenv
 # Setup the argument parser
 parser = argparse.ArgumentParser(description="Download audio from YouTube, transcribe it using Whisper, summarize the transcription with OpenAI's GPT, and clean up the downloaded files.")
 parser.add_argument("video_url", help="The URL of the YouTube video")
-parser.add_argument("whisper_model_size", help="The size of the Whisper model to use (e.g., tiny, base, small, medium, large)")
-parser.add_argument("gpt_model", help="The GPT model to use for summarization (e.g., gpt-3.5-turbo, gpt-4, gpt-4-1106-preview). For longer videos remember to use models with larger context window.")
+parser.add_argument("whisper_model_size", default="base", help="The size of the Whisper model to use (e.g., tiny, base, small, medium, large)")
+parser.add_argument("gpt_model", default="gpt-4", help="The GPT model to use for summarization (e.g., gpt-3.5-turbo, gpt-4, gpt-4-1106-preview). For longer videos remember to use models with larger context window.")
+parser.add_argument("language", default="english", help="Language in which summary should be provided.")
 args = parser.parse_args()
 
 # Load the .env file
@@ -63,11 +64,11 @@ def transcribe_audio(audio_path, model_size):
     return result["text"]
 
 # Generate a summary using OpenAI GPT
-def generate_summary(transcription, gpt_model):
+def generate_summary(transcription, gpt_model, language):
     # Construct the initial conversation context
     messages = [
         {"role": "system", "content": "You are a helpful assistant tasked with summarizing transcriptions."},
-        {"role": "user", "content": f"Please summarize the following transcription: {transcription}"}
+        {"role": "user", "content": f"Please summarize the following transcription, summary should be in {language} language: {transcription}"}
     ]
 
     attempts = 0
@@ -114,7 +115,7 @@ def save_summary(summary, filename):
 if __name__ == "__main__":
     audio_path = download_audio(args.video_url)
     transcription = transcribe_audio(audio_path, args.whisper_model_size)
-    summary = generate_summary(transcription, args.gpt_model)
+    summary = generate_summary(transcription, args.gpt_model, args.language)
     
     # Save summary to a text file
     summary_filename = os.path.splitext(audio_path)[0] + "_summary.txt"
